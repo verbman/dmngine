@@ -95,6 +95,10 @@ for (var i = 0; i < filenames.length; i++) {
   let testName = filenames[i].replace(".csv", "");
   if (!process.env.npm_config_test || process.env.npm_config_test == 'all' || process.env.npm_config_test == testName) {
     var data = require("fs").readFileSync(directory + filenames[i], "utf8");
+
+    //Fix issues created by Excel, booleans converted to lowercase and carriage returns removed.
+    data = data.replace(/(?:TRUE)/g, 'true').replace(/(?:FALSE)/g, 'false').replace(/(?:\r\n|\r|\n)/g, '\n');
+
     converter.csv2json(data, (err, json) => {
       
       if(err){

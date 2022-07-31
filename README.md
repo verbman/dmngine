@@ -1,23 +1,29 @@
 # Project Description and Goals
 
-Low impact DMN development, testing and deployment using modern accessible tooling.
+Low impact DMN development, testing and deployment using *more* accessible tooling.
 
 Project Goals:
- - Utilise [docker] containers to lesson pain of leveraging underlying java dependancies
+ - Utilise [docker] containers to reduce the pain of relying on underlying java dependencies
  - Create a friendly development environment for non java programmers
- - Create a testing toolkit that utilises well known technologies and provides a test format that non programmers can weild
+ - Create a testing toolkit non java based (mocha - nodejs) and provides a test format that non programmers can wield (csv in Excel)
  - Allow for creation of lightweight native excutable images that can be used in production environments.
+
+**This project leverages the following technologies**
+
+ - DMN/Feel execution: Kogito and Quarkus
+ - DMN Editing: VSCode and Kogito bundle extension
+ - Development Environment: VSCode, Docker Desktop and Remote Containers Extension (no need to install jdk)
+ - Quarkus DMN API endpoint testing: Nodejs, Mocha with dynamic tests stored in CSV files for rapid test writing
 
 ---
 
 ## Development Environment Setup
 
-This project utilises:
- - VSCode, 
- - the VSCode extension pack `ms-vscode-remote.vscode-remote-extensionpack` and 
+To develop and execute the rules and tests you initially need the following prerequisites installed:
+ - VSCode,
+ - the VSCode extension pack `ms-vscode-remote.vscode-remote-extensionpack` and
  - Docker Desktop.
 
-To create a working environment ensure you have the above prerequisites are installed.
 
 ### To start the rules development server
 
@@ -25,7 +31,7 @@ In VSCode `Ctrl+Shift+P` to open the Command Palette and choose `Remote-Containe
 
 Select the `rules-container` folder.
 At this point VSCode will by utilising the `/docker-compose.yml` file spin up two docker images, `rules` for authoring and publishing dmn files and `testing` for testing the API endpoints that the first container exposes for executing the dmn files.
-VSCode at this point also installs a number of VSCode extensions to this image.
+VSCode at this point also installs a number of VSCode extensions to each image.
 
 Once VSCode has reopened within the Dev Container, access the terminal in vscode to run any of the following commands.
 
@@ -35,6 +41,7 @@ If you have not yet created a project then run the following changing `xxx` to a
 ```
 $ make create org=xxx project=projectname
 ```
+Currently this development environment only supports one project but it should be straightforward to implement multi-project support
 
 **Access Rules Project**
 
@@ -42,7 +49,7 @@ Then can access your project folder with the following:
 ```
 $ cd projectname
 ```
-This navigates you into the root of your rules project. 
+This navigates you into the root of your rules project.
 
 **Run Rules Project Dev Server**
 
@@ -51,7 +58,7 @@ From there run the following to start up the development server:
 ```
 $ make dev
 ```
-The first time this runs it takes a while as it downloads required dependancies into the mounted /.m2 folder.
+The first time this runs it takes a while as it downloads required dependencies into the mounted /.m2 folder. This is mounted to ensure permanence between image rebuilds.
 (To exit the development server you can just type `q`)
 
 To see other options check the `/projectname/Makefile`.
@@ -77,10 +84,10 @@ We've provided an example file with which you can modify the `quarkus.http.cors.
 
 *A limitation with VSCode is that you can only access one remote container at a time per VSCode window. So our final development environment will have us with two VSCode windows, one for rules and one for testing. This makes good sense once you get used to working this way. Remember that both containers are now already running because of how this project is configured.*
 
-`Ctrl+Shift+N` for new VSCode window.
+`Ctrl+Shift+N` for the new VSCode window.
 Then as before `Ctrl+Shift+P` to open the Command Palette and choose `Remote-Containers: Open folder in container...`
 
-This time select the `rules-testing-container` folder. VSCode will now open the testing project and attach it to the already running container. It will also install the VSCode extensions just for this image. 
+This time select the `rules-testing-container` folder. VSCode will now open the testing project and attach it to the already running container. It will also install the VSCode extensions just for this image.
 
 **Access Testing Project**
 
@@ -92,7 +99,7 @@ $ cd rules-testing-container
 
 **Setup Testing Project**
 
-Then on the first time run the following to install the depencancies. The node_modules folder in the root is mounted into the image meaning this step isn't required everytime the image is recreated.
+Then on the first time run the following to install the depencancies. The node_modules folder in the root is mounted into the image meaning this step isn't required every time the image is recreated.
 ```
 $ make install
 ```
@@ -113,7 +120,7 @@ The test files need to be located:
 ```
 
 The test files are csv files based on the given inputs and expected outputs.
-We've provided an example.dmn file and it's corresponding example.csv file to illustrate the approach.
+We've provided an example.dmn file and its corresponding example.csv file to illustrate the approach.
 
 Each file pair is matched by the filename.
 
@@ -159,7 +166,7 @@ Some work is still required to be done in understanding how we might tackle sub 
 ## Publishing Executables for Production use
 
 
-Once you have a suite of DMN files completed and you want to publish it you can do so utilising the `[projectname]/Makefile`.  But first if you want to modify the release number of your project if can be found in the `/[projectname]/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
+Once you have a suite of DMN files completed and you want to publish it you can do so utilising the `[projectname]/Makefile`.  But first, if you want to modify the release number of your project, it can be found in the `/[projectname]/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
 
 `make native` will provide further instructions on the process and then kick start the initial step - that being the compilation of the native image.
 
