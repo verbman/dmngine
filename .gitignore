@@ -1,0 +1,8 @@
+# dotenv environment variable files
+.env
+
+# Cache for mavin dependancies
+.m2
+
+# Cache for node modules
+.node_modules

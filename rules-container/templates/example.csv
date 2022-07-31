@@ -1,0 +1,6 @@
+Description,Status,Given.This,Given.That,Given.AllTheThings,Expect.OutcomeA,Expect.OutcomeB
+Given This and That and AllTheThings what outcomes we should expect,200,true,1,"[""an"",""array""]","mice","[""got"",""the"",""idea"",""yet"",""?""]"
+This is a second test showing different givens and expecteds,200,true,3,"[""an"",""array""]","rats","[""one item array""]"
+Now we're really mixing it up,200,true,2,"[""thingy"",""array""]","mice","[""another"",""array""]"
+This error is intentionally being thrown so you can fix it,200,false,1,"[""thingy"",""array""]","little dishes",null
+When This is false then we expect the OutcomeB to be null,200,false,1,"[""thingy"",""array""]","little fishes",null

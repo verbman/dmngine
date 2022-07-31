@@ -1,0 +1,18 @@
+{
+  "name": "api-testing-suite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.6",
+    "chai-arrays": "^2.2.0",
+    "chai-http": "^4.3.0",
+    "json-2-csv": "^3.17.1",
+    "mocha": "^10.0.0"
+  }
+}
