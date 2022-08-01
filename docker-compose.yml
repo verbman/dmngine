@@ -16,8 +16,6 @@ services:
       - -c
       - |
         tail -f /dev/null
-    ports:
-      - 5005:5005
     volumes:
       - .:/workspaces
       - ./.m2:/home/vscode/.m2

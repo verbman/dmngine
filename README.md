@@ -41,7 +41,10 @@ If you have not yet created a project then run the following changing `xxx` to a
 ```
 $ make create org=xxx project=projectname
 ```
-Currently this development environment only supports one project but it should be straightforward to implement multi-project support
+By default the project will utilise the port `8080` for the development server. If you're creating a second project or have a port clash, you can state a custom port for the project as follows:
+```
+$ make create org=xxx project=projectname port=9090
+```
 
 **Access Rules Project**
 
@@ -68,6 +71,7 @@ You can access the development server at the following urls:
  - http://localhost:8080/
  - http://localhost:8080/example (location of example.dmn REST api endpoint)
 
+Note if you've specified a custom port - you will need to adjust the links above as expected. If you need to do that after you've created the project - you can modify the config file as follows.
 
 
 ### Configure Rules Project Dev Server
@@ -159,6 +163,12 @@ $ make test file=example log=true
 ```
 Some work is still required to be done in understanding how we might tackle sub folders of dmn files and tests etc. But currently the project only supports a flat folder structure in the folders described.
 
+When you have multiple projects setup you will need to specify which project you're wanting to test. You can do this as follows:
+```
+$ make test project=project-name file=example
+```
+
+
 ---
 
 
@@ -166,8 +176,8 @@ Some work is still required to be done in understanding how we might tackle sub 
 ## Publishing Executables for Production use
 
 
-Once you have a suite of DMN files completed and you want to publish it you can do so utilising the `[projectname]/Makefile`.  But first, if you want to modify the release number of your project, it can be found in the `/[projectname]/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
+Once you have a suite of DMN files completed and you want to publish it you can do so.  But first, if you want to modify the release number of your project, it can be found in the `/[projectname]/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
 
-`make native` will provide further instructions on the process and then kick start the initial step - that being the compilation of the native image.
+Running `make native` in the project root directory (i.e.) `cd project-name` will provide further instructions on the process and then kick start the initial step - that being the compilation of the native image.
 
 The final steps as described in the `[projectname]/Makefile` need to be run on the host machine command prompt (rather than one of the containers).
