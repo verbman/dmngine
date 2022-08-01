@@ -154,23 +154,36 @@ if (directory.length > 0 && project.length > 0) {
                       if (process.env.npm_config_log) {
                         console.log("----- " + res.request.method + ' : ' + res.request.url + " -----")
                         console.log(res.request._data)
-                        console.log(JSON.parse(res.res.text))
+                        if (res.res.text.trim().length > 0) {
+                          console.log(JSON.parse(res.res.text));
+                        }
+                      }
+                      if (res.res.text.trim().length === 0) {
+                        throw new Error("Nothing was returned, check the DMN Model Name, file name and swagger ui to see if (" + url + ":" + port + "/" + testName + ") exists.")
                       }
                       if (jsonSingular.Status) expect(res).to.have.status(jsonSingular.Status);
-                      if (jsonSingular.Expect) {
+                      if (jsonSingular.Expect && res.res.text.trim().length > 0) {
                         var output = JSON.parse(res.res.text);
-                        var tests = parseJsonOutput(jsonSingular.Expect, output, "Expect", []);
-
-                        for (var i = 0; i < tests.length; i++) {
-                          if (Array.isArray(tests[i].expected) && tests[i].output != null) {
-                            expect(tests[i].expected).to.equalTo(tests[i].output);
-                          } else {
-                            expect(tests[i].expected).to.equal(tests[i].output);
+                        if (output.modelName && output.messages && output.messages.length > 0) {
+                          var error = '';
+                          for (var i = 0; i < output.messages.length; i++) {
+                            error += output.messages[i].message + '\n';
                           }
-                        }
-                        if (process.env.npm_config_log) {
-                          console.log("-----tests-----");
-                          console.log(tests);
+                          throw new Error(error);
+                        } else {
+                          var tests = parseJsonOutput(jsonSingular.Expect, output, "Expect", []);
+
+                          for (var i = 0; i < tests.length; i++) {
+                            if (Array.isArray(tests[i].expected) && tests[i].output != null) {
+                              expect(tests[i].expected).to.equalTo(tests[i].output);
+                            } else {
+                              expect(tests[i].expected).to.equal(tests[i].output);
+                            }
+                          }
+                          if (process.env.npm_config_log) {
+                            console.log("-----tests-----");
+                            console.log(tests);
+                          }
                         }
                       }
                     })
