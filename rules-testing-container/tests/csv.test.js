@@ -131,13 +131,6 @@ function isJsonString(str) {
 setProjectAndDirectory();
 if (directory.length > 0 && project.length > 0) {
   getPort();
-  var dmnTest = '';
-  if (process.env.npm_config_test) {
-    var temp = process.env.npm_config_test.split("*");
-    if (temp.length > 1) {
-      dmnTest = temp[0];
-    }
-  }
 
   let filenames = getTestFiles();
   for (var i = 0; i < filenames.length; i++) {
@@ -164,8 +157,11 @@ if (directory.length > 0 && project.length > 0) {
                 let jsonSingular = json[i];
                 addTest(suite, testName + ': #' + (i + 1) + ' ' + jsonSingular.Description, function () {
                   this.timeout(50000);
+                  var temp = testName.split("*");
+                  var dmnTest = (temp.length > 1) ? temp[0] : testName;
+
                   return chai.request(url + ":" + port + "/")
-                    .post(encodeURIComponent((dmnTest.length > 0) ? dmnTest : testName))
+                    .post(encodeURIComponent(dmnTest))
                     .send(jsonSingular.Given)
                     .then(function (res) {
                       if (process.env.npm_config_log) {
