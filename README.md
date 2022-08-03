@@ -15,6 +15,8 @@ Project Goals:
  - Development Environment: VSCode, Docker Desktop and Remote Containers Extension (no need to install jdk)
  - Quarkus DMN API endpoint testing: Nodejs, Mocha with dynamic tests stored in CSV files for rapid test writing
 
+ If you're reading this you're probably looking at a project based on: `https://github.com/verbman/dmngine`
+
 ---
 
 ## Development Environment Setup
