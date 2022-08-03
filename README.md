@@ -125,21 +125,27 @@ The test files need to be located:
 
 The test files are csv files based on the given inputs and expected outputs.
 We've provided an example.dmn file and its corresponding example.csv file to illustrate the approach.
+You can also spread tests over multiple files by using an asterix, i.e. `example*2.csv`
 
 Each file pair is matched by the filename.
 
 The CSV file structure has the following:
  - Description (the description of the test - doesn't affect the test itself)
- - Status Code (the expected status code returned from the API request)
+ - Status Code (the expected status code returned from the API request, optional)
  - A series of headings in the format Given.[fieldname] - these match the inputs of the DMN file
  - A series of headings in the format Expect.[fieldname] - these match outputs from the DMN file.
 
- There is some support for structures `Expect.Cat.Name` but we've found structures generally making testing more difficult across a variety of tools.
+There is some support for structures `Expect.Cat.Name` but we've found structures generally making testing more difficult across a variety of tools.
  
 The example pair of files provided also show how to approach:
  - nulls
  - array inputs
  - array outputs
+
+ For testing structure outputs from a dmn file you need to represent it (as json) in your csv file as follows:
+ ```
+ ...,"[{""Min"":1, ""Max"":3, ""Label"":""something""}]",
+ ```
 
  You can delete these files at any time.
 

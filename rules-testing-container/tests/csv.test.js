@@ -119,9 +119,26 @@ function parseJsonOutput(expect, output, path, tests) {
   return tests;
 }
 
+function isJsonString(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 setProjectAndDirectory();
 if (directory.length > 0 && project.length > 0) {
   getPort();
+  var dmnTest = '';
+  if (process.env.npm_config_test) {
+    var temp = process.env.npm_config_test.split("*");
+    if (temp.length > 1) {
+      dmnTest = temp[0];
+    }
+  }
+
   let filenames = getTestFiles();
   for (var i = 0; i < filenames.length; i++) {
     let testName = filenames[i].replace(".csv", "");
@@ -148,7 +165,7 @@ if (directory.length > 0 && project.length > 0) {
                 addTest(suite, testName + ': #' + (i + 1) + ' ' + jsonSingular.Description, function () {
                   this.timeout(50000);
                   return chai.request(url + ":" + port + "/")
-                    .post(encodeURIComponent(testName))
+                    .post(encodeURIComponent((dmnTest.length > 0) ? dmnTest : testName))
                     .send(jsonSingular.Given)
                     .then(function (res) {
                       if (process.env.npm_config_log) {
@@ -176,6 +193,10 @@ if (directory.length > 0 && project.length > 0) {
                           for (var i = 0; i < tests.length; i++) {
                             if (Array.isArray(tests[i].expected) && tests[i].output != null) {
                               expect(tests[i].expected).to.equalTo(tests[i].output);
+                            } else if ((typeof tests[i].expected === 'string' || tests[i].expected instanceof String) &&
+                              isJsonString(tests[i].expected)
+                            ) {
+                              expect(JSON.parse(tests[i].expected)).to.deep.equal(tests[i].output);
                             } else {
                               expect(tests[i].expected).to.equal(tests[i].output);
                             }
