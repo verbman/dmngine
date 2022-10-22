@@ -106,7 +106,7 @@ Then on the first time run the following to install the depencancies.
 ```
 $ make install
 ```
-(This just runs `npm install`)
+
 ---
 
 
