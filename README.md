@@ -3,10 +3,10 @@
 Low impact DMN development, testing and deployment using *more* accessible tooling.
 
 Project Goals:
- - Utilise [docker] containers to reduce the pain of relying on underlying java dependencies
+ - Utilise [docker] container to reduce the pain of relying on underlying java dependencies
  - Create a friendly development environment for non java programmers
  - Create a testing toolkit non java based (mocha - nodejs) and provides a test format that non programmers can wield (csv in Excel)
- - Allow for creation of lightweight native excutable images that can be used in production environments.
+ - Allow for creation of lightweight native excutable image that can be used in production environments.
 
 **This project leverages the following technologies**
 
@@ -29,30 +29,37 @@ To develop and execute the rules and tests you initially need the following prer
 
 ### To start the rules development server
 
-In VSCode `Ctrl+Shift+P` to open the Command Palette and choose `Remote-Containers: Open folder in container...`
+If you already have the project open in vscode hit `Ctrl+Shift+P` to open the Command Palette and choose `Dev Containers: Open folder in Container...` 
+(or click the green angle brackets bottom left of the screen and choose `Reopen in Container`)
 
-Select the `rules-container` folder.
-At this point VSCode will by utilising the `/docker-compose.yml` file spin up two docker images, `rules` for authoring and publishing dmn files and `testing` for testing the API endpoints that the first container exposes for executing the dmn files.
-VSCode at this point also installs a number of VSCode extensions to each image.
+At this point VSCode will by utilising the `/.devcontainer/docker-compose.yml` file spin up a docker images, `rules` for authoring and publishing dmn files with the needed Java based development environment tools, appropriate Visual Code extensions and Node for running the mocha test suites.
 
 Once VSCode has reopened within the Dev Container, access the terminal in vscode to run any of the following commands.
+
+**Using the VSCode command prompt**
+
+All the following commands are best run in the VSCode command prompt window as they need to be run *in* the container that VSCode is running for us.
+You can open the terminal by selecting "Terminal" in the top menubar of VSCode and selecting "New Terminal"
 
 **Create Rules Project**
 
 If you have not yet created a project then run the following changing `xxx` to a short organisation acronym and `projectname` to what you'd like your project called.
+
+**For the purposes of this README from now on we'll assume the project name: `turing`**
 ```
-$ make create org=xxx project=projectname
+$ make create org=xxx project=turing
 ```
 By default the project will utilise the port `8080` for the development server. If you're creating a second project or have a port clash, you can state a custom port for the project as follows:
 ```
-$ make create org=xxx project=projectname port=9090
+$ make create org=xxx project=turing port=9090
 ```
+We create a project populated with an example.dmn file and example.csv file so everything works. These can be deleted, but if it's your first time leave them and ensure you can get testing working.
 
 **Access Rules Project**
 
 Then can access your project folder with the following:
 ```
-$ cd projectname
+$ cd turing
 ```
 This navigates you into the root of your rules project.
 
@@ -66,7 +73,7 @@ $ make dev
 The first time this runs it takes a while as it downloads required dependencies into the mounted /.m2 folder. This is mounted to ensure permanence between image rebuilds.
 (To exit the development server you can just type `q`)
 
-To see other options check the `/projectname/Makefile`.
+To see other options check the `/turing/Makefile`.
 
 You can access the development server at the following urls:
  - http://localhost:8080/q/swagger-ui/
@@ -80,36 +87,26 @@ Note if you've specified a custom port - you will need to adjust the links above
 
 You can control aspects of the development server (known as quarkus) via the following file:
 ```
-/[projectname]/src/main/resources/application.properties
+/turing/src/main/resources/application.properties
 ```
 We've provided an example file with which you can modify the `quarkus.http.cors.origins` value to that of your local web application to allow it access.
 
 
 
-### To start the testing environment
+### To run the testing environment
 
-*A limitation with VSCode is that you can only access one remote container at a time per VSCode window. So our final development environment will have us with two VSCode windows, one for rules and one for testing. This makes good sense once you get used to working this way. Remember that both containers are now already running because of how this project is configured.*
+Ensure you've run `make dev` as outlined above in the "Run Rules Project Dev Server".
 
-`Ctrl+Shift+N` for the new VSCode window.
-Then as before `Ctrl+Shift+P` to open the Command Palette and choose `Remote-Containers: Open folder in container...`
+Open a new command prompt (you can run multiple command prompts which is needed here for running tests while the dev server is running).
 
-This time select the `rules-testing-container` folder. VSCode will now open the testing project and attach it to the already running container. It will also install the VSCode extensions just for this image.
-
-**Access Testing Project**
-
-Using the VSCode command prompt navigate to the root of the testing project
-
-```
-$ cd rules-testing-container
-```
 
 **Setup Testing Project**
 
-Then on the first time run the following to install the depencancies. The node_modules folder in the root is mounted into the image meaning this step isn't required every time the image is recreated.
+Then on the first time run the following to install the depencancies.
 ```
 $ make install
 ```
-
+(This just runs `npm install`)
 ---
 
 
@@ -117,12 +114,12 @@ $ make install
 
 The dmn files need to be located:
 ```
-/[projectname]/src/main/resources/*.dmn
+/turing/src/main/resources/*.dmn
 ```
 
 The test files need to be located:
 ```
-/[projectname]-tests/*.csv
+/turing/tests/*.csv
 ```
 
 The test files are csv files based on the given inputs and expected outputs.
@@ -141,8 +138,7 @@ There is some support for structures `Expect.Cat.Name` but we've found structure
  
 The example pair of files provided also show how to approach:
  - nulls
- - array inputs
- - array outputs
+ - arrays
 
  For testing structure outputs from a dmn file you need to represent it (as json) in your csv file as follows:
  ```
@@ -155,19 +151,22 @@ The example pair of files provided also show how to approach:
 
 Running tests are a critical part of DMN development. First ensure the Rules Development server is running (see "Run Rules Project Dev Server")
 
-Then in the VSCode window for the `rules-testing-container` run the following:
+Then open a new terminal in vs code and run:
 
-```
-$ make test file=example
-```
-Inspect the `/rules-testing-container/Makefile` to see the different options.
-Most notably you can test all the test files as follows:
 ```
 $ make test
 ```
+If you have multiple projects and want to test just one:
+```
+$ make test project=turing
+```
+If you want to run just one test file in a project
+```
+$ make test project=turing file=example
+```
 and you can enable logging of the API response object with:
 ```
-$ make test file=example log=true
+$ make test log=true
 ```
 Some work is still required to be done in understanding how we might tackle sub folders of dmn files and tests etc. But currently the project only supports a flat folder structure in the folders described.
 
@@ -184,8 +183,8 @@ $ make test project=project-name file=example
 ## Publishing Executables for Production use
 
 
-Once you have a suite of DMN files completed and you want to publish it you can do so.  But first, if you want to modify the release number of your project, it can be found in the `/[projectname]/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
+Once you have a suite of DMN files completed and you want to publish it you can do so.  But first, if you want to modify the release number of your project, it can be found in the `/turing/pom.xml` file. The initial default is `1.0.0-SNAPSHOT`.
 
 Running `make native` in the project root directory (i.e.) `cd project-name` will provide further instructions on the process and then kick start the initial step - that being the compilation of the native image.
 
-The final steps as described in the `[projectname]/Makefile` need to be run on the host machine command prompt (rather than one of the containers).
+The final steps as described in the `/turing/Makefile` need to be run on the host machine command prompt (rather than one of the containers).

@@ -1,0 +1,7 @@
+Description,Status,Given.VisiblyAngry,Given.HeartRate,Given.Answers,Expect.Robot,Expect.SightsSeen
+Test 1,false,true,null,"What do you mean, I'm not helping?",null,[]
+Test 2,false,true,90,"What desert?",false,[]
+Test 3,false,true,100,"I've never seen a turtle... But I understand what you mean.",true,"[""Attack ships on fire off the shoulder of Orion"",""I watched C-beams glitter in the dark near the Tannhäuser Gate""]"
+Test 4,false,false,120,"Do you make up these questions, Mr. Holden?",false,[]
+Intentionally wrong and it has a gun!,false,false,130,"Let me tell you about my mother.",false,"[""Attack ships on fire off the shoulder of Orion"",""I watched C-beams glitter in the dark near the Tannhäuser Gate""]"
+Test 5,false,false,130,"Let me tell you about my mother.",true,"[""Attack ships on fire off the shoulder of Orion"",""I watched C-beams glitter in the dark near the Tannhäuser Gate""]"

@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/java
 {
 	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
-	"dockerComposeFile": "../../docker-compose.yml",
+	"dockerComposeFile": "docker-compose.yml",
 
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
@@ -24,7 +24,12 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"vscjava.vscode-java-pack",
-				"kie-group.vscode-extension-kogito-bundle"
+				"kie-group.vscode-extension-kogito-bundle",
+				"dbaeumer.vscode-eslint",
+				"khaeransori.json2csv",
+				"mechatroner.rainbow-csv",
+				"kie-group.vscode-extension-kogito-bundle",
+				"ms-vscode.makefile-tools"
 			]
 		}
 	},
