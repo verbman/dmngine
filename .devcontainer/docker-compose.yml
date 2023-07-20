@@ -7,7 +7,7 @@ services:
         INSTALL_MAVEN: "true"
         INSTALL_GRADLE: "true"
         INSTALL_GRAALVM: "true"
-        GRAALVM_VERSION: "22.1.0"
+        GRAALVM_VERSION: "22.3.0"
         NODE_VERSION: "16"
     working_dir: /workspaces
     network_mode: bridge
